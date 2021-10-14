@@ -17,9 +17,14 @@ const io = socketio(server, {
   }
 });
 
+const chatRoutes = require('./routes/chatRoutes');
+const Message = require('./models/Message');
+
 app.use(cors());
 app.use(express.json());
 app.use(morgan('dev'));
+
+app.use('/api/chat', chatRoutes);
 
 // Socket.io events
 io.on('connection', (socket) => {
@@ -30,9 +35,15 @@ io.on('connection', (socket) => {
     console.log(`User joined room: ${room}`);
   });
 
-  socket.on('message', (data) => {
+  socket.on('message', async (data) => {
     // data: { room, sender, text }
-    io.to(data.room).emit('message', data);
+    try {
+      const message = new Message(data);
+      await message.save();
+      io.to(data.room).emit('message', data);
+    } catch (err) {
+      console.error('Error saving message:', err);
+    }
   });
 
   socket.on('disconnect', () => {
