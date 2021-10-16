@@ -1,0 +1,37 @@
+openapi: 3.0.0
+info:
+  title: Chatly API
+  description: API documentation for the Chatly Real-time Messaging App
+  version: 1.0.0
+servers:
+  - url: http://localhost:5000/api
+    description: Local development server
+paths:
+  /health:
+    get:
+      summary: API health check
+      responses:
+        '200':
+          description: API is healthy
+  /chat/rooms:
+    get:
+      summary: Get all chat rooms
+      responses:
+        '200':
+          description: List of rooms
+    post:
+      summary: Create a new chat room
+      responses:
+        '201':
+          description: Room created
+  /chat/messages/{room}:
+    get:
+      summary: Get messages for a specific room
+      parameters:
+        - name: room
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: List of messages
