@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./backend
+    container_name: chatly_api
+    ports:
+      - "5000:5000"
+    environment:
+      - PORT=5000
+      - MONGO_URI=mongodb://mongodb:27017/chatly
+      - JWT_SECRET=chatlysecret
+      - NODE_ENV=development
+    depends_on:
+      - mongodb
+
+  frontend:
+    build: ./frontend
+    container_name: chatly_ui
+    ports:
+      - "3000:3000"
+    stdin_open: true
+    tty: true
+    depends_on:
+      - backend
+
+  mongodb:
+    image: mongo:4.4
+    container_name: chatly_db
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+volumes:
+  mongo_data:
