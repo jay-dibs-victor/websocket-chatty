@@ -1,16 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Layout, Menu, Typography, Button, Space } from 'antd';
 import { MessageOutlined, PlusOutlined } from '@ant-design/icons';
 import { Link, Route, Switch } from 'react-router-dom';
+import axios from 'axios';
+import ChatRoom from '../pages/ChatRoom';
 
 const { Header, Sider, Content } = Layout;
 const { Title, Text } = Typography;
-
-const mockRooms = [
-  { _id: '1', name: 'General', description: 'General discussion' },
-  { _id: '2', name: 'Random', description: 'Random talks' },
-  { _id: '3', name: 'Tech', description: 'Technology and programming' },
-];
 
 const Placeholder = ({ title }) => (
   <div style={{ display: 'flex', height: '100%', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }}>
@@ -21,6 +17,23 @@ const Placeholder = ({ title }) => (
 
 const ChatLayout = () => {
   const [collapsed, setCollapsed] = useState(false);
+  const [rooms, setRooms] = useState([]);
+
+  useEffect(() => {
+    const fetchRooms = async () => {
+      try {
+        const { data } = await axios.get('/api/chat/rooms');
+        setRooms(data.length > 0 ? data : [
+          { _id: '1', name: 'General', description: 'General discussion' },
+          { _id: '2', name: 'Random', description: 'Random talks' },
+          { _id: '3', name: 'Tech', description: 'Technology and programming' },
+        ]);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchRooms();
+  }, []);
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
@@ -39,7 +52,7 @@ const ChatLayout = () => {
 
         <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
           <Menu.ItemGroup key="g1" title={!collapsed && "Public Rooms"}>
-            {mockRooms.map(room => (
+            {rooms.map(room => (
               <Menu.Item key={room._id} icon={<MessageOutlined />}>
                 <Link to={`/room/${room._id}`}>{room.name}</Link>
               </Menu.Item>
@@ -58,7 +71,7 @@ const ChatLayout = () => {
         <Content style={{ margin: '24px 16px', padding: 24, minHeight: 280, background: '#fff' }}>
           <Switch>
             <Route exact path="/" component={() => <Placeholder title="Select a room to start chatting" />} />
-            <Route path="/room/:id" component={() => <Placeholder title="Chat interface coming soon" />} />
+            <Route path="/room/:id" component={ChatRoom} />
           </Switch>
         </Content>
       </Layout>
