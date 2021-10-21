@@ -8,7 +8,7 @@ import axios from 'axios';
 const { Text } = Typography;
 
 // Determine socket URL based on environment
-const ENDPOINT = process.env.NODE_ENV === 'production' ? '/' : 'http://localhost:5000';
+const ENDPOINT = process.env.NODE_ENV === 'production' ? '/' : 'http://localhost:5115';
 let socket;
 
 const ChatRoom = () => {
@@ -69,9 +69,9 @@ const ChatRoom = () => {
                 avatar={<Avatar icon={<UserOutlined />} style={{ backgroundColor: msg.sender === username ? '#1890ff' : '#87d068' }} />}
                 title={<Text strong>{msg.sender}</Text>}
                 description={
-                  <div style={{ 
-                    background: msg.sender === username ? '#e6f7ff' : '#f6ffed', 
-                    padding: '8px 12px', 
+                  <div style={{
+                    background: msg.sender === username ? '#e6f7ff' : '#f6ffed',
+                    padding: '8px 12px',
                     borderRadius: '8px',
                     display: 'inline-block',
                     maxWidth: '80%'
@@ -88,11 +88,11 @@ const ChatRoom = () => {
 
       <div style={{ marginTop: 'auto' }}>
         <Space direction="horizontal" style={{ width: '100%' }}>
-          <Input 
-            addonBefore="Name" 
-            value={username} 
-            onChange={(e) => setUsername(e.target.value)} 
-            style={{ width: '150px' }} 
+          <Input
+            addonBefore="Name"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            style={{ width: '150px' }}
           />
           <Input.Search
             placeholder="Type a message..."

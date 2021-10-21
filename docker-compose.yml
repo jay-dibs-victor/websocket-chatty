@@ -21,6 +21,8 @@ services:
       - "3115:3000"
     stdin_open: true
     tty: true
+    environment:
+      - WDS_SOCKET_PORT=0
     depends_on:
       - backend
 

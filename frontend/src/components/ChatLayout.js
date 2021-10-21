@@ -6,7 +6,7 @@ import axios from 'axios';
 import ChatRoom from '../pages/ChatRoom';
 
 const { Header, Sider, Content } = Layout;
-const { Title, Text } = Typography;
+const { Title } = Typography;
 
 const Placeholder = ({ title }) => (
   <div style={{ display: 'flex', height: '100%', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }}>
@@ -35,6 +35,19 @@ const ChatLayout = () => {
     fetchRooms();
   }, []);
 
+  const menuItems = [
+    {
+      key: 'g1',
+      label: !collapsed && "Public Rooms",
+      type: 'group',
+      children: rooms.map(room => ({
+        key: room._id,
+        icon: <MessageOutlined />,
+        label: <Link to={`/room/${room._id}`}>{room.name}</Link>,
+      })),
+    },
+  ];
+
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Sider collapsible collapsed={collapsed} onCollapse={setCollapsed} width={250}>
@@ -50,15 +63,12 @@ const ChatLayout = () => {
           )}
         </div>
 
-        <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
-          <Menu.ItemGroup key="g1" title={!collapsed && "Public Rooms"}>
-            {rooms.map(room => (
-              <Menu.Item key={room._id} icon={<MessageOutlined />}>
-                <Link to={`/room/${room._id}`}>{room.name}</Link>
-              </Menu.Item>
-            ))}
-          </Menu.ItemGroup>
-        </Menu>
+        <Menu 
+          theme="dark" 
+          defaultSelectedKeys={['1']} 
+          mode="inline" 
+          items={menuItems}
+        />
       </Sider>
       
       <Layout className="site-layout">
